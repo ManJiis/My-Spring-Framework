@@ -2,8 +2,8 @@ package top.b0x0.spring.sample.mvc.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.b0x0.spring.framework.webmvc.annotation.Autowired;
-import top.b0x0.spring.framework.webmvc.annotation.Controller;
+import top.b0x0.spring.framework.ioc.annotation.Autowired;
+import top.b0x0.spring.framework.ioc.annotation.Controller;
 import top.b0x0.spring.framework.webmvc.annotation.RequestMapping;
 import top.b0x0.spring.framework.webmvc.annotation.RequestParam;
 import top.b0x0.spring.sample.mvc.service.IMyTestService;

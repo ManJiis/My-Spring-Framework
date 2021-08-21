@@ -1,13 +1,12 @@
 package top.b0x0.spring.sample.mvc.controller;
 
-import top.b0x0.spring.framework.webmvc.annotation.Controller;
+import top.b0x0.spring.framework.ioc.annotation.Controller;
 import top.b0x0.spring.framework.webmvc.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
 
 /**
  * @author ManJiis

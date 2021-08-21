@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>b0x0-spring-framework</artifactId>
+        <groupId>top.b0x0.spring</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>top.b0x0.spring</groupId>
+    <artifactId>b0x0-framework-ioc</artifactId>
+    <name>B0x0 Framework IOC</name>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <!-- common -->
+        <dependency>
+            <groupId>top.b0x0.spring</groupId>
+            <artifactId>b0x0-framework-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- AOP -->
+        <dependency>
+            <groupId>top.b0x0.spring</groupId>
+            <artifactId>b0x0-framework-aop</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- SLF4J -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+
+
+    </dependencies>
+
+</project>

@@ -2,16 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>b0x0-framework-samples</artifactId>
-        <groupId>top.b0x0.spring.sample</groupId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>b0x0-framework-sample-webmvc</artifactId>
-    <name>B0x0 Framework Sample Web MVC</name>
-    <packaging>war</packaging>
+    <parent>
+        <artifactId>b0x0-spring-framework</artifactId>
+        <groupId>top.b0x0.spring</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>b0x0-framework-common</artifactId>
+    <name>B0x0 Framework Common</name>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -19,13 +20,10 @@
     </properties>
 
     <dependencies>
-
+        <!-- SLF4J -->
         <dependency>
-            <groupId>top.b0x0.spring</groupId>
-            <artifactId>b0x0-framework-webmvc</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
         </dependency>
-
     </dependencies>
-
 </project>

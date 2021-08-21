@@ -2,7 +2,7 @@ package top.b0x0.spring.sample.mvc.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.b0x0.spring.framework.webmvc.annotation.Service;
+import top.b0x0.spring.framework.ioc.annotation.Service;
 
 /**
  * @author ManJiis
