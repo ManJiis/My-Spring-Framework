@@ -10,8 +10,8 @@ import top.b0x0.spring.framework.webmvc.annotation.Service;
  * @since JDK 1.8
  */
 @Service
-public class MyTestServiceImpl implements IMyTestService {
-    private static final Logger log = LoggerFactory.getLogger(MyTestServiceImpl.class);
+public class MyTestService2Impl implements IMyTestService {
+    private static final Logger log = LoggerFactory.getLogger(MyTestService2Impl.class);
 
     @Override
     public String select(String name, String age) {

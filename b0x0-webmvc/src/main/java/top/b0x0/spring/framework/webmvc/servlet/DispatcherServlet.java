@@ -4,6 +4,8 @@ package top.b0x0.spring.framework.webmvc.servlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.b0x0.spring.framework.webmvc.annotation.*;
+import top.b0x0.spring.framework.webmvc.servlet.helperbean.ClassInfo;
+import top.b0x0.spring.framework.webmvc.servlet.helperbean.RequestPathInfo;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -19,10 +21,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 /**
  * DispatcherServlet 所有 http 请求都由此 Servlet 转发
@@ -44,15 +46,15 @@ public class DispatcherServlet extends HttpServlet {
     /**
      * 保存所有扫描包的list
      */
-    List<String> classNameList = new ArrayList<>();
+    List<String> classList = new CopyOnWriteArrayList<>();
     /**
      * 创建一个容器 map 保存注解后面的值为 key,对象为value
      */
-    Map<String, Object> beanMap = new HashMap<>();
+    Map<String, Object> beanMap = new ConcurrentHashMap<>();
     /**
      * 创建一个容器 map 存放路径方法
      */
-    Map<String, Object> urlMappingMap = new HashMap<>();
+    Map<RequestPathInfo, ClassInfo> urlMappingMap = new ConcurrentHashMap<>();
 
     /**
      * <load-on-startup>0</load-on-startup>
@@ -72,7 +74,7 @@ public class DispatcherServlet extends HttpServlet {
         // 4. 匹配路径
         urlMapping();
 
-        log.info("classNameList.size(): {} , classNameList: {}", classNameList.size(), classNameList);
+        log.info("classNameList.size(): {} , classNameList: {}", classList.size(), classList);
         log.info("beanMap.size(): {} , beanMap: {}", beanMap.entrySet().size(), beanMap);
         log.info("urlMappingMap.size(): {} , urlMappingMap: {}", urlMappingMap.entrySet().size(), urlMappingMap);
     }
@@ -98,13 +100,28 @@ public class DispatcherServlet extends HttpServlet {
 
         System.out.println("2. urlMappingMap.get(" + path + ")");
         // /controller/select--->method
-        Method method = (Method) urlMappingMap.get(path);
-        Object[] args = handMethod(req, resp, method);
-        Object instance = beanMap.get("/" + path.split("/")[1]);
+        RequestPathInfo pathInfo = new RequestPathInfo();
+        pathInfo.setHttpPath(path);
 
+        // 根据请求路径以及请求方法获取相应的Controller类及方法信息
+        ClassInfo classInfo = urlMappingMap.get(pathInfo);
+
+        Method invokeMethod = classInfo.getInvokeMethod();
+        log.info("method name: {}", invokeMethod.getName());
+
+        // 根据方法名获取类名
+        Class<?> controllerClass = classInfo.getControllerClass();
+        log.info("class name: {}", controllerClass.getName());
+
+        // 处理请求参数
+        Object[] args = handMethod(req, resp, invokeMethod);
+
+        // 获取类实例
+        Object instance = beanMap.get(controllerClass.getName());
+        log.info(" class instance: {}", instance);
         try {
             System.out.println("3. invoke method start");
-            method.invoke(instance, args);
+            invokeMethod.invoke(instance, args);
             System.out.println("4. invoke method end");
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             e.printStackTrace();
@@ -114,25 +131,48 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     /**
-     * 保存请求路径
+     * 保存Controller的请求路径
      */
     public void urlMapping() {
+
+        RequestPathInfo requestPathInfo;
+        ClassInfo classInfo;
+
         for (Map.Entry<String, Object> entry : beanMap.entrySet()) {
             Object instance = entry.getValue();
             Class<?> clazz = instance.getClass();
-            // 类上有MyController注解
+            // 类上有Controller注解
             if (clazz.isAnnotationPresent(Controller.class)) {
                 RequestMapping classRequestMapping = clazz.getAnnotation(RequestMapping.class);
                 // 获得类上请求路径
                 String classRequestPath = classRequestMapping.value();
+                String urlMappingMapKey;
                 Method[] methods = clazz.getMethods();
                 for (Method method : methods) {
                     if (method.isAnnotationPresent(RequestMapping.class)) {
                         RequestMapping request = method.getAnnotation(RequestMapping.class);
                         String methodPath = request.value();
-                        // key: /myController/select
-                        // value: public void top.b0x0.spring.mvc.controller.TestController.select(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse,java.lang.String,java.lang.String)
-                        urlMappingMap.put(classRequestPath + methodPath, method);
+                        if ("".equals(classRequestPath) || "/".equals(classRequestPath)) {
+                            urlMappingMapKey = methodPath;
+                        } else {
+                            urlMappingMapKey = classRequestPath + methodPath;
+                        }
+                        List<String> keyList = urlMappingMap.keySet().stream().map(RequestPathInfo::getHttpPath).collect(Collectors.toList());
+                        boolean contains = keyList.contains(urlMappingMapKey);
+                        if (contains) {
+                            log.error("url mapping duplication ： {}", urlMappingMapKey);
+                            System.exit(0);
+                        }
+                        requestPathInfo = new RequestPathInfo();
+                        requestPathInfo.setHttpPath(urlMappingMapKey);
+
+                        classInfo = new ClassInfo();
+                        classInfo.setControllerClass(clazz);
+                        classInfo.setInvokeMethod(method);
+
+                        // 请求路径为key: /myController/select
+                        // 方法为value: public void top.b0x0.spring.mvc.controller.TestController.select(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse,java.lang.String,java.lang.String)
+                        urlMappingMap.put(requestPathInfo, classInfo);
                     }
                 }
             }
@@ -171,7 +211,7 @@ public class DispatcherServlet extends HttpServlet {
      * 实例化并添加到容器
      */
     public void doInstance() {
-        for (String className : classNameList) {
+        for (String className : classList) {
             String classPath = className.replace(".class", "");
             try {
                 Class<?> clazz = Class.forName(classPath);
@@ -180,8 +220,17 @@ public class DispatcherServlet extends HttpServlet {
                     Object controllerInstance = clazz.newInstance();
                     RequestMapping mapping = clazz.getAnnotation(RequestMapping.class);
                     String controllerKey = mapping.value();
-                    log.info("controllerKey: {}", controllerKey);
-                    log.info("controllerInstance: {}", controllerInstance);
+                    if ("".equals(controllerKey) || "/".equals(controllerKey)) {
+                        controllerKey = clazz.getName();
+                        Set<String> keySet = beanMap.keySet();
+                        boolean contains = keySet.contains(controllerKey);
+                        if (contains) {
+                            log.error("class bean name duplication ： {}", controllerKey);
+                            System.exit(0);
+                        }
+                    }
+//                    log.info("controllerKey: {}", controllerKey);
+//                    log.info("controllerInstance: {}", controllerInstance);
                     // key: /myController
                     // value: top.b0x0.spring.mvc.controller.TestController@37e2d5ff
                     beanMap.put(controllerKey, controllerInstance);
@@ -190,8 +239,17 @@ public class DispatcherServlet extends HttpServlet {
                     Object serviceInstance = clazz.newInstance();
                     Service mapping = clazz.getAnnotation(Service.class);
                     String serviceKey = mapping.value();
-                    log.info("serviceKey: {}", serviceKey);
-                    log.info("serviceInstance: {}", serviceInstance);
+                    if ("".equals(serviceKey)) {
+                        serviceKey = clazz.getName();
+                        Set<String> keySet = beanMap.keySet();
+                        boolean contains = keySet.contains(serviceKey);
+                        if (contains) {
+                            log.error("class bean name duplication ： {}", serviceKey);
+                            System.exit(0);
+                        }
+                    }
+//                    log.info("serviceKey: {}", serviceKey);
+//                    log.info("serviceInstance: {}", serviceInstance);
                     // key: /testService
                     // value: top.b0x0.spring.mvc.service.TestServiceImpl@1ca5c567
                     beanMap.put(serviceKey, serviceInstance);
@@ -240,7 +298,6 @@ public class DispatcherServlet extends HttpServlet {
             return;
         }
         for (String fileName : fileList) {
-            // top/b0x0/mirrorming_springMVCdemo
             File fileObj = new File(fileStr + fileName);
             if (fileObj.isDirectory()) {
                 // 递归扫描包名
@@ -248,8 +305,7 @@ public class DispatcherServlet extends HttpServlet {
             } else {
                 // 找到class类 top.b0x0.*.class
                 String className = basePackage + "." + fileObj.getName();
-//                System.out.println("className = " + className);
-                classNameList.add(className);
+                classList.add(className);
             }
         }
     }
@@ -285,13 +341,6 @@ public class DispatcherServlet extends HttpServlet {
             index++;
         }
         return args;
-    }
-
-    public static void main(String[] args) {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("11", "222");
-        hashMap.put("22", "222");
-        System.out.println("hashMap = " + hashMap);
     }
 
 }

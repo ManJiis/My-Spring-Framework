@@ -23,7 +23,7 @@ import java.io.PrintWriter;
 public class MyTestController {
     private static final Logger log = LoggerFactory.getLogger(MyTestController.class);
 
-    @Autowired("/testServiceImpl")
+    @Autowired("MyTestServiceImpl")
     public IMyTestService testService;
 
     @RequestMapping("/select")
