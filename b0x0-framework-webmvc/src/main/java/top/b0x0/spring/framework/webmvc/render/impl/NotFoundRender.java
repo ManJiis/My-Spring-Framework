@@ -1,20 +1,21 @@
 package top.b0x0.spring.framework.webmvc.render.impl;
 
-
 import top.b0x0.spring.framework.webmvc.render.Render;
 import top.b0x0.spring.framework.webmvc.handler.RequestHandlerChain;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
- * 默认渲染 200
+ * 渲染 404
  *
  * @author ManJiis
  * @since 2021-08-22
+ * @since JDK1.8
  */
-public class DefaultRender implements Render {
+public class NotFoundRender implements Render {
 
     @Override
     public void render(RequestHandlerChain handlerChain) throws Exception {
-        int status = handlerChain.getResponseStatus();
-        handlerChain.getResponse().setStatus(status);
+        handlerChain.getResponse().sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 }

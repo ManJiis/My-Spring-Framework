@@ -7,10 +7,15 @@ import top.b0x0.spring.framework.ioc.annotation.Autowired;
 import top.b0x0.spring.framework.ioc.annotation.Controller;
 import top.b0x0.spring.framework.ioc.annotation.Service;
 import top.b0x0.spring.framework.webmvc.annotation.*;
+import top.b0x0.spring.framework.webmvc.handler.Handler;
+import top.b0x0.spring.framework.webmvc.handler.RequestHandlerChain;
+import top.b0x0.spring.framework.webmvc.handler.impl.JspHandler;
+import top.b0x0.spring.framework.webmvc.handler.impl.PreRequestHandler;
+import top.b0x0.spring.framework.webmvc.handler.impl.SimpleUrlHandler;
+import top.b0x0.spring.framework.webmvc.handler.impl.UrlMappingHandler;
 import top.b0x0.spring.framework.webmvc.servlet.helperbean.ClassInfo;
 import top.b0x0.spring.framework.webmvc.servlet.helperbean.RequestPathInfo;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -21,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
@@ -43,7 +47,7 @@ public class DispatcherServlet extends HttpServlet {
 
     static {
         system_os_name = System.getProperty("os.name");
-        log.debug("system_os_name = " + system_os_name);
+        log.debug("system os name = " + system_os_name);
     }
 
     /**
@@ -60,78 +64,115 @@ public class DispatcherServlet extends HttpServlet {
     Map<RequestPathInfo, ClassInfo> urlMappingMap = new ConcurrentHashMap<>();
 
     /**
+     * 请求执行链
+     */
+    private final List<Handler> HANDLERS = new ArrayList<>();
+
+    /**
+     * load-on-startup 0
+     * 由于web.xml中配置了此项，tomcat启动时会先执行这个方法
+     * <p>
+     * 初始化 请求执行链
+     *
+     * @throws ServletException ServletException
+     */
+    @Override
+    public void init() throws ServletException {
+        HANDLERS.add(new PreRequestHandler());
+        HANDLERS.add(new SimpleUrlHandler(getServletContext()));
+        HANDLERS.add(new JspHandler(getServletContext()));
+        HANDLERS.add(new UrlMappingHandler());
+    }
+
+    /**
+     * 执行请求
+     *
+     * @param req  {@link HttpServletRequest}
+     * @param resp {@link HttpServletResponse}
+     * @throws ServletException ServletException
+     * @throws IOException      IOException
+     */
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        RequestHandlerChain handlerChain = new RequestHandlerChain(HANDLERS.iterator(), req, resp);
+        // 执行默认的 Handler Chain
+        handlerChain.doHandlerChain();
+        // 执行 Render
+        handlerChain.doRender();
+    }
+
+    /**
      * load-on-startup 0
      * 由于web.xml中配置了此项,tomcat启动时会先执行这个方法
      */
-    @Override
-    public void init(ServletConfig servletConfig) {
-        // 1. 扫描top.b0x0.spring.mvc.controller
-        doScan("top.b0x0");
-
-        // 2. 实例化
-        doInstance();
-
-        // 3. 注入
-        doAutowired();
-
-        // 4. 匹配路径
-        urlMapping();
-
-        log.info("classNameList.size(): {} , classNameList: {}", classList.size(), classList);
-        log.info("beanMap.size(): {} , beanMap: {}", beanMap.entrySet().size(), beanMap);
-        log.info("urlMappingMap.size(): {} , urlMappingMap: {}", urlMappingMap.entrySet().size(), urlMappingMap);
-    }
-
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.doPost(req, resp);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // 获取到请求路径
-
-        // 项目名/controller/select
-        String uri = req.getRequestURI();
-        System.out.println("------------发起请求------------");
-        System.out.println("1. RequestURI = " + uri);
-        // 项目名
-        String context = req.getContextPath();
-        // /controller/select--->key
-        String path = uri.replace(context, "");
-
-        System.out.println("2. urlMappingMap.get(" + path + ")");
-        // /controller/select--->method
-        RequestPathInfo pathInfo = new RequestPathInfo();
-        pathInfo.setHttpPath(path);
-
-        // 根据请求路径以及请求方法获取相应的Controller类及方法信息
-        ClassInfo classInfo = urlMappingMap.get(pathInfo);
-
-        Method invokeMethod = classInfo.getInvokeMethod();
-        log.info("method name: {}", invokeMethod.getName());
-
-        // 根据方法名获取类名
-        Class<?> controllerClass = classInfo.getControllerClass();
-        log.info("class name: {}", controllerClass.getName());
-
-        // 处理请求参数
-        Object[] args = handMethod(req, resp, invokeMethod);
-
-        // 获取类实例
-        Object instance = beanMap.get(controllerClass.getName());
-        log.info(" class instance: {}", instance);
-        try {
-            System.out.println("3. invoke method start");
-            invokeMethod.invoke(instance, args);
-            System.out.println("4. invoke method end");
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        // super.doPost(req, resp);
-        System.out.println("4. 请求结束");
-    }
+//    @Override
+//    public void init(ServletConfig servletConfig) {
+//        // 1. 扫描top.b0x0.spring.mvc.controller
+//        doScan("top.b0x0");
+//
+//        // 2. 实例化
+//        doInstance();
+//
+//        // 3. 注入
+//        doAutowired();
+//
+//        // 4. 匹配路径
+//        urlMapping();
+//
+//        log.info("classNameList.size(): {} , classNameList: {}", classList.size(), classList);
+//        log.info("beanMap.size(): {} , beanMap: {}", beanMap.entrySet().size(), beanMap);
+//        log.info("urlMappingMap.size(): {} , urlMappingMap: {}", urlMappingMap.entrySet().size(), urlMappingMap);
+//    }
+//
+//    @Override
+//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        this.doPost(req, resp);
+//    }
+//
+//    @Override
+//    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        // 获取到请求路径
+//
+//        // 项目名/controller/select
+//        String uri = req.getRequestURI();
+//        System.out.println("------------发起请求------------");
+//        System.out.println("1. RequestURI = " + uri);
+//        // 项目名
+//        String context = req.getContextPath();
+//        // /controller/select--->key
+//        String path = uri.replace(context, "");
+//
+//        System.out.println("2. urlMappingMap.get(" + path + ")");
+//        // /controller/select--->method
+//        RequestPathInfo pathInfo = new RequestPathInfo();
+//        pathInfo.setHttpPath(path);
+//
+//        // 根据请求路径以及请求方法获取相应的Controller类及方法信息
+//        ClassInfo classInfo = urlMappingMap.get(pathInfo);
+//
+//        Method invokeMethod = classInfo.getInvokeMethod();
+//        log.info("method name: {}", invokeMethod.getName());
+//
+//        // 根据方法名获取类名
+//        Class<?> controllerClass = classInfo.getControllerClass();
+//        log.info("class name: {}", controllerClass.getName());
+//
+//        // 处理请求参数
+//        Object[] args = handMethod(req, resp, invokeMethod);
+//
+//        // 获取类实例
+//        Object instance = beanMap.get(controllerClass.getName());
+//        log.info(" class instance: {}", instance);
+//        try {
+//            System.out.println("3. invoke method start");
+//            invokeMethod.invoke(instance, args);
+//            System.out.println("4. invoke method end");
+//        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+//            e.printStackTrace();
+//        }
+//        // super.doPost(req, resp);
+//        System.out.println("4. 请求结束");
+//    }
 
     /**
      * 保存Controller的请求路径
@@ -337,7 +378,7 @@ public class DispatcherServlet extends HttpServlet {
                         RequestParam rp = (RequestParam) paramAn;
                         String value = rp.value();
                         // 找到注解里的name和age
-                        args[args_i++] = request.getParameter(rp.value());
+                        args[args_i++] = request.getParameter(value);
                     }
                 }
             }

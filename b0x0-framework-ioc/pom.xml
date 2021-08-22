@@ -7,13 +7,13 @@
     <parent>
         <artifactId>b0x0-spring-framework</artifactId>
         <groupId>top.b0x0.spring</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>2.0-SNAPSHOT</version>
     </parent>
 
     <groupId>top.b0x0.spring</groupId>
     <artifactId>b0x0-framework-ioc</artifactId>
     <name>B0x0 Framework IOC</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>2.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -25,14 +25,14 @@
         <dependency>
             <groupId>top.b0x0.spring</groupId>
             <artifactId>b0x0-framework-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>2.0-SNAPSHOT</version>
         </dependency>
 
         <!-- AOP -->
         <dependency>
             <groupId>top.b0x0.spring</groupId>
             <artifactId>b0x0-framework-aop</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>2.0-SNAPSHOT</version>
         </dependency>
 
         <!-- SLF4J -->

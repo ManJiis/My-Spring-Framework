@@ -1,9 +1,8 @@
-package top.b0x0.spring.framework.webmvc.servlet;
+package top.b0x0.spring.framework.webmvc.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.b0x0.spring.framework.webmvc.handler.Handler;
-import top.b0x0.spring.framework.webmvc.handler.impl.InternalErrorRender;
+import top.b0x0.spring.framework.webmvc.render.impl.InternalErrorRender;
 import top.b0x0.spring.framework.webmvc.render.impl.DefaultRender;
 import top.b0x0.spring.framework.webmvc.render.Render;
 
@@ -16,6 +15,7 @@ import java.util.Iterator;
  *
  * @author ManJiis
  * @since 2021-08-22
+ * @since JDK1.8
  */
 public class RequestHandlerChain {
     private static final Logger log = LoggerFactory.getLogger(RequestHandlerChain.class);
@@ -24,7 +24,7 @@ public class RequestHandlerChain {
      * Handler迭代器
      * {@link Handler}
      */
-    private Iterator<Handler> handlerIt;
+    private Iterator<Handler> handlerIterator;
 
     /**
      * 请求request
@@ -58,8 +58,8 @@ public class RequestHandlerChain {
      */
     private Render render;
 
-    public RequestHandlerChain(Iterator<Handler> handlerIt, HttpServletRequest request, HttpServletResponse response) {
-        this.handlerIt = handlerIt;
+    public RequestHandlerChain(Iterator<Handler> handlerIterator, HttpServletRequest request, HttpServletResponse response) {
+        this.handlerIterator = handlerIterator;
         this.request = request;
         this.response = response;
         this.requestMethod = request.getMethod();
@@ -72,8 +72,8 @@ public class RequestHandlerChain {
      */
     public void doHandlerChain() {
         try {
-            while (handlerIt.hasNext()) {
-                if (!handlerIt.next().handle(this)) {
+            while (handlerIterator.hasNext()) {
+                if (!handlerIterator.next().handle(this)) {
                     break;
                 }
             }
@@ -102,12 +102,12 @@ public class RequestHandlerChain {
         return log;
     }
 
-    public Iterator<Handler> getHandlerIt() {
-        return handlerIt;
+    public Iterator<Handler> getHandlerIterator() {
+        return handlerIterator;
     }
 
-    public void setHandlerIt(Iterator<Handler> handlerIt) {
-        this.handlerIt = handlerIt;
+    public void setHandlerIterator(Iterator<Handler> handlerIterator) {
+        this.handlerIterator = handlerIterator;
     }
 
     public HttpServletRequest getRequest() {
@@ -166,7 +166,7 @@ public class RequestHandlerChain {
         RequestHandlerChain that = (RequestHandlerChain) o;
 
         if (responseStatus != that.responseStatus) return false;
-        if (handlerIt != null ? !handlerIt.equals(that.handlerIt) : that.handlerIt != null) return false;
+        if (handlerIterator != null ? !handlerIterator.equals(that.handlerIterator) : that.handlerIterator != null) return false;
         if (request != null ? !request.equals(that.request) : that.request != null) return false;
         if (response != null ? !response.equals(that.response) : that.response != null) return false;
         if (requestMethod != null ? !requestMethod.equals(that.requestMethod) : that.requestMethod != null)
@@ -177,7 +177,7 @@ public class RequestHandlerChain {
 
     @Override
     public int hashCode() {
-        int result = handlerIt != null ? handlerIt.hashCode() : 0;
+        int result = handlerIterator != null ? handlerIterator.hashCode() : 0;
         result = 31 * result + (request != null ? request.hashCode() : 0);
         result = 31 * result + (response != null ? response.hashCode() : 0);
         result = 31 * result + (requestMethod != null ? requestMethod.hashCode() : 0);
@@ -190,7 +190,7 @@ public class RequestHandlerChain {
     @Override
     public String toString() {
         return "RequestHandlerChain{" +
-                "handlerIt=" + handlerIt +
+                "handlerIt=" + handlerIterator +
                 ", request=" + request +
                 ", response=" + response +
                 ", requestMethod='" + requestMethod + '\'' +

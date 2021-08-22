@@ -1,10 +1,10 @@
 package top.b0x0.spring.framework.webmvc.render;
 
 
-import top.b0x0.spring.framework.webmvc.servlet.RequestHandlerChain;
+import top.b0x0.spring.framework.webmvc.handler.RequestHandlerChain;
 
 /**
- * 渲染请求结果 interface
+ * 渲染请求结果
  *
  * @author ManJiis
  * @since 2021-08-22

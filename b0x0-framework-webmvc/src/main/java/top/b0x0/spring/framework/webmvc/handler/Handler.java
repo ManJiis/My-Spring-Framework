@@ -1,8 +1,6 @@
 package top.b0x0.spring.framework.webmvc.handler;
 
 
-import top.b0x0.spring.framework.webmvc.servlet.RequestHandlerChain;
-
 /**
  * 请求执行器 Handler
  *

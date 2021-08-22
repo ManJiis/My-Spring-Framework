@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
  *
  * @author ManJiis
  * @since 2021-08-22
+ * @since JDK1.8
  */
 public class BeanContext {
     private static final Logger log = LoggerFactory.getLogger(BeanContext.class);
@@ -39,6 +40,13 @@ public class BeanContext {
     private static final List<Class<? extends Annotation>> BEAN_ANNOTATION
             = Arrays.asList(Component.class, Controller.class, Service.class, Repository.class, Aspect.class);
 
+    private BeanContext() {
+    }
+
+    private BeanContext(boolean isLoadBean) {
+        this.isLoadBean = isLoadBean;
+    }
+
     /**
      * 获取Bean容器实例
      *
@@ -55,7 +63,7 @@ public class BeanContext {
      */
     public void loadBeans(String basePackage) {
         if (isLoadBean()) {
-            log.warn("bean已经加载");
+            log.warn("bean has been loaded");
             return;
         }
 

@@ -14,6 +14,7 @@ import java.util.Optional;
  *
  * @author ManJiis
  * @since 2021-08-22
+ * @since JDK1.8
  */
 public class Ioc {
     private static final Logger log = LoggerFactory.getLogger(Ioc.class);
@@ -30,7 +31,7 @@ public class Ioc {
     /**
      * 执行Ioc
      */
-    public void doIoc() {
+    public void doInstance() {
         for (Class<?> clz : beanContext.getClasses()) {
             final Object targetBean = beanContext.getBean(clz);
             Field[] fields = clz.getDeclaredFields();
