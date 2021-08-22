@@ -1,1 +1,1 @@
-简易 Spring MVC 实现
+简易 Spring Framework 实现
