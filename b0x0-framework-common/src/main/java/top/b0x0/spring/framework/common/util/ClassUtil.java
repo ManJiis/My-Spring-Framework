@@ -193,7 +193,7 @@ public final class ClassUtil {
     }
 
     /**
-     * github/zzzzbw/App.class -> github.zzzzbw.App.class
+     * spring/framework/App.class -> spring.framework.App.class
      **/
     private static String getJarEntryFileClassPath(JarEntry jarEntry) {
         return jarEntry.getName().replaceAll("/", ".");

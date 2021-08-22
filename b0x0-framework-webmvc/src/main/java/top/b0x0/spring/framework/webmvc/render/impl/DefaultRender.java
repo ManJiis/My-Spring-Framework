@@ -2,7 +2,7 @@ package top.b0x0.spring.framework.webmvc.render.impl;
 
 
 import top.b0x0.spring.framework.webmvc.render.Render;
-import top.b0x0.spring.framework.webmvc.servlet.RequestHandlerChain;
+import top.b0x0.spring.framework.webmvc.handler.RequestHandlerChain;
 
 /**
  * 默认渲染 200
