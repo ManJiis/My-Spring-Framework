@@ -93,7 +93,7 @@ public class RequestHandlerChain {
         try {
             render.render(this);
         } catch (Exception e) {
-            log.error("doRender", e);
+            log.error("doRender error", e);
             throw new RuntimeException(e);
         }
     }
