@@ -87,6 +87,7 @@ public final class AppBoot {
 
             // tomcat启动时加载所有class
             String basePackage = appConfiguration.getBootClass().getPackage().getName();
+            log.info("project package: {}", basePackage);
             BeanContext.getInstance().loadBeans(basePackage);
 
             // aop ioc

@@ -5,7 +5,7 @@ import top.b0x0.spring.framework.aop.advice.Advice;
 import java.lang.reflect.Method;
 
 /**
- * 前置通知接口
+ * 前置通知接口BeforeAdvice，继承这个通知接口并实现其前置方法，可以前置增强目标类，即目标方法执行前会先执行这个前置方法
  *
  * @author ManJiis
  * @since 2021-08-22
