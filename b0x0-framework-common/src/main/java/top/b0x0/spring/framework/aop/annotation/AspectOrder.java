@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Order {
+public @interface AspectOrder {
 
     /**
      * aop顺序,值越大越先执行

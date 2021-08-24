@@ -5,7 +5,7 @@ import top.b0x0.spring.framework.aop.advice.Advice;
 import java.lang.reflect.Method;
 
 /**
- * 返回通知接口
+ * 后置通知接口AfterReturningAdvice，继承这个通知接口并实现其返回后方法，可以后置增强目标类，即目标方法执后并返回结果时，会执行这个返回方法。
  *
  * @author ManJiis
  * @since 2021-08-22
