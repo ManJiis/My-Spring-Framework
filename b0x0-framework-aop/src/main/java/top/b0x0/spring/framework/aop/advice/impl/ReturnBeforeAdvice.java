@@ -5,12 +5,13 @@ import top.b0x0.spring.framework.aop.advice.Advice;
 import java.lang.reflect.Method;
 
 /**
- * 后置通知接口AfterReturningAdvice，继承这个通知接口并实现其返回后方法，可以后置增强目标类，即目标方法执后并返回结果时，会执行这个返回方法。
+ * 后置通知接口AfterReturningAdvice
+ * 继承这个通知接口并实现其返回后方法，可以后置增强目标类，即目标方法执后并返回结果之前，会执行这个返回方法。
  *
  * @author ManJiis
  * @since 2021-08-22
  */
-public interface AfterReturningAdvice extends Advice {
+public interface ReturnBeforeAdvice extends Advice {
 
     /**
      * 返回后方法
@@ -21,5 +22,5 @@ public interface AfterReturningAdvice extends Advice {
      * @param args        目标方法参数
      * @throws Throwable Throwable
      */
-    void afterReturning(Class<?> clz, Object returnValue, Method method, Object[] args) throws Throwable;
+    void returnBefore(Class<?> clz, Object returnValue, Method method, Object[] args) throws Throwable;
 }

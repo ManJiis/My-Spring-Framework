@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 /**
  * Aop执行器
  *
- * @author zzzzbw
- * @since 2018/6/20 17:43
+ * @author ManJiis
+ * @since 20121-08-26
  */
 @Slf4j
 public class Aop {
@@ -22,7 +22,7 @@ public class Aop {
     /**
      * Bean容器
      */
-    private BeanContext beanContext;
+    private final BeanContext beanContext;
 
     public Aop() {
         beanContext = BeanContext.getInstance();
@@ -32,14 +32,14 @@ public class Aop {
      * 执行Aop
      */
     public void doAop() {
-        //创建所有的代理通知列表
+        // 创建所有的代理通知列表
         List<ProxyAdvisor> proxyList = beanContext.getClassesBySuper(Advice.class)
                 .stream()
                 .filter(clz -> clz.isAnnotationPresent(Aspect.class))
                 .map(this::createProxyAdvisor)
                 .collect(Collectors.toList());
 
-        //创建代理类并注入到Bean容器中
+        // 创建代理类并注入到Bean容器中
         beanContext.getClasses()
                 .stream()
                 .filter(clz -> !Advice.class.isAssignableFrom(clz))
@@ -47,7 +47,7 @@ public class Aop {
                 .forEach(clz -> {
                     List<ProxyAdvisor> matchProxies = createMatchProxies(proxyList, clz);
                     if (matchProxies.size() > 0) {
-                        Object proxyBean = ProxyCreator.createProxy(clz, matchProxies);
+                        Object proxyBean = CglibProxyCreator.createProxy(clz, matchProxies);
                         beanContext.addBean(clz, proxyBean);
                     }
                 });
@@ -60,15 +60,15 @@ public class Aop {
      * @return 代理通知类
      */
     private ProxyAdvisor createProxyAdvisor(Class<?> aspectClass) {
-        int order = 0;
+        int executeOrder = 0;
         if (aspectClass.isAnnotationPresent(AspectOrder.class)) {
-            order = aspectClass.getAnnotation(AspectOrder.class).value();
+            executeOrder = aspectClass.getAnnotation(AspectOrder.class).value();
         }
         String expression = aspectClass.getAnnotation(Aspect.class).pointcut();
         ProxyPointcut proxyPointcut = new ProxyPointcut();
         proxyPointcut.setExpression(expression);
         Advice advice = (Advice) beanContext.getBean(aspectClass);
-        return new ProxyAdvisor(advice, proxyPointcut, order);
+        return new ProxyAdvisor(advice, proxyPointcut, executeOrder);
     }
 
     /**
@@ -83,7 +83,7 @@ public class Aop {
         return proxyList
                 .stream()
                 .filter(advisor -> advisor.getPointcut().matches(targetBean.getClass()))
-                .sorted(Comparator.comparingInt(ProxyAdvisor::getOrder))
+                .sorted(Comparator.comparingInt(ProxyAdvisor::getExecuteOrder))
                 .collect(Collectors.toList());
     }
 

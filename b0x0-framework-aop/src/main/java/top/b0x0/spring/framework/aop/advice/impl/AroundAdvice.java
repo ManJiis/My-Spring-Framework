@@ -6,5 +6,5 @@ package top.b0x0.spring.framework.aop.advice.impl;
  * @author ManJiis
  * @since 2021-08-22
  */
-public interface AroundAdvice extends BeforeAdvice, AfterReturningAdvice, ThrowsAdvice {
+public interface AroundAdvice extends BeforeAdvice, ReturnBeforeAdvice, ThrowsAdvice {
 }

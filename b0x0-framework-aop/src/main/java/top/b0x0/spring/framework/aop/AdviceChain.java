@@ -9,8 +9,8 @@ import java.util.List;
 /**
  * 通知链
  *
- * @author zzzzbw
- * @since 2018/6/20 23:33
+ * @author ManJiis
+ * @since 20121-08-26
  */
 public class AdviceChain {
 
@@ -41,19 +41,19 @@ public class AdviceChain {
     /**
      * 代理通知列
      */
-    private List<ProxyAdvisor> proxyList;
+    private final List<ProxyAdvisor> proxyAdvisorList;
     /**
      * 代理通知列index
      */
     private int adviceIndex = 0;
 
-    public AdviceChain(Class<?> targetClass, Object target, Method method, Object[] args, MethodProxy methodProxy, List<ProxyAdvisor> proxyList) {
+    public AdviceChain(Class<?> targetClass, Object target, Method method, Object[] args, MethodProxy methodProxy, List<ProxyAdvisor> proxyAdvisorList) {
         this.targetClass = targetClass;
         this.target = target;
         this.method = method;
         this.args = args;
         this.methodProxy = methodProxy;
-        this.proxyList = proxyList;
+        this.proxyAdvisorList = proxyAdvisorList;
     }
 
     /**
@@ -64,13 +64,13 @@ public class AdviceChain {
      */
     public Object doAdviceChain() throws Throwable {
         Object result;
-        while (adviceIndex < proxyList.size()
-                && !proxyList.get(adviceIndex).getPointcut().matches(method)) {
-            //如果当前方法不匹配切点,则略过该代理通知类
+        while (adviceIndex < proxyAdvisorList.size()
+                && !proxyAdvisorList.get(adviceIndex).getPointcut().matches(method)) {
+            // 如果当前方法不匹配切点,则略过该代理通知类
             adviceIndex++;
         }
-        if (adviceIndex < proxyList.size()) {
-            result = proxyList.get(adviceIndex++).doProxy(this);
+        if (adviceIndex < proxyAdvisorList.size()) {
+            result = proxyAdvisorList.get(adviceIndex++).doProxyMethod(this);
         } else {
             result = methodProxy.invokeSuper(target, args);
         }

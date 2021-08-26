@@ -12,15 +12,15 @@ import java.util.Set;
 /**
  * 代理切点类
  *
- * @author zzzzbw
- * @since 2018/6/21 12:00
+ * @author ManJiis
+ * @since 20121-08-26
  */
 public class ProxyPointcut {
 
     /**
      * 切点解析器
      */
-    private PointcutParser pointcutParser;
+    private final PointcutParser pointcutParser;
 
     /**
      * (AspectJ)表达式
@@ -66,7 +66,7 @@ public class ProxyPointcut {
      * @return 是否匹配
      */
     public boolean matches(Class<?> targetClass) {
-        checkReadyToMatch();
+        this.checkReadyToMatch();
         return pointcutExpression.couldMatchJoinPointsInType(targetClass);
     }
 
@@ -77,7 +77,7 @@ public class ProxyPointcut {
      * @return 是否匹配
      */
     public boolean matches(Method method) {
-        checkReadyToMatch();
+        this.checkReadyToMatch();
         ShadowMatch shadowMatch = pointcutExpression.matchesMethodExecution(method);
         if (shadowMatch.alwaysMatches()) {
             return true;

@@ -8,12 +8,12 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- * 代理类创建器
+ * cglib 代理类创建器
  *
- * @author zzzzbw
- * @since 2018/6/21 12:12
+ * @author ManJiis
+ * @since 20121-08-26
  */
-public final class ProxyCreator {
+public final class CglibProxyCreator {
 
     /**
      * 创建代理类
@@ -27,7 +27,7 @@ public final class ProxyCreator {
     }
 
     /**
-     * cglib MethodInterceptor实现类
+     * cglib MethodInterceptor 实现类
      */
     private static class AdviceMethodInterceptor implements MethodInterceptor {
 
@@ -39,16 +39,16 @@ public final class ProxyCreator {
         /**
          * 代理通知列表
          */
-        private List<ProxyAdvisor> proxyList;
+        private final List<ProxyAdvisor> proxyAdvisorList;
 
-        public AdviceMethodInterceptor(Class<?> targetClass, List<ProxyAdvisor> proxyList) {
+        public AdviceMethodInterceptor(Class<?> targetClass, List<ProxyAdvisor> proxyAdvisorList) {
             this.targetClass = targetClass;
-            this.proxyList = proxyList;
+            this.proxyAdvisorList = proxyAdvisorList;
         }
 
         @Override
         public Object intercept(Object target, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-            return new AdviceChain(targetClass, target, method, args, proxy, proxyList).doAdviceChain();
+            return new AdviceChain(targetClass, target, method, args, proxy, proxyAdvisorList).doAdviceChain();
         }
     }
 }
