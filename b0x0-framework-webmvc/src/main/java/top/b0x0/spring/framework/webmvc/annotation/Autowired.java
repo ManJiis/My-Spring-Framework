@@ -1,4 +1,4 @@
-package top.b0x0.spring.framework.ioc.annotation;
+package top.b0x0.spring.framework.webmvc.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

@@ -3,9 +3,9 @@ package top.b0x0.spring.framework.webmvc.servlet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.b0x0.spring.framework.ioc.annotation.Autowired;
-import top.b0x0.spring.framework.ioc.annotation.Controller;
-import top.b0x0.spring.framework.ioc.annotation.Service;
+import top.b0x0.spring.framework.webmvc.annotation.Autowired;
+import top.b0x0.spring.framework.webmvc.annotation.Controller;
+import top.b0x0.spring.framework.webmvc.annotation.Service;
 import top.b0x0.spring.framework.webmvc.annotation.*;
 import top.b0x0.spring.framework.webmvc.servlet.helperbean.ClassInfo;
 import top.b0x0.spring.framework.webmvc.servlet.helperbean.RequestPathInfo;
