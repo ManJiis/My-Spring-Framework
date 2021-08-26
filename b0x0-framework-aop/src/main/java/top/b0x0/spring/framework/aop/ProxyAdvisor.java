@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.b0x0.spring.framework.aop.advice.Advice;
-import top.b0x0.spring.framework.aop.advice.impl.AfterReturningAdvice;
+import top.b0x0.spring.framework.aop.advice.impl.ReturnBeforeAdvice;
 import top.b0x0.spring.framework.aop.advice.impl.BeforeAdvice;
 import top.b0x0.spring.framework.aop.advice.impl.ThrowsAdvice;
 
@@ -14,8 +14,8 @@ import java.lang.reflect.Method;
 /**
  * 代理通知类
  *
- * @author zzzzbw
- * @since 2018/6/20 23:40
+ * @author ManJiis
+ * @since 20121-08-26
  */
 @Slf4j
 @AllArgsConstructor
@@ -36,7 +36,7 @@ public class ProxyAdvisor {
     /**
      * 执行顺序
      */
-    private int order;
+    private int executeOrder;
 
     /**
      * 执行代理方法
@@ -45,7 +45,7 @@ public class ProxyAdvisor {
      * @return 目标方法执行结果
      * @throws Throwable Throwable
      */
-    public Object doProxy(AdviceChain adviceChain) throws Throwable {
+    public Object doProxyMethod(AdviceChain adviceChain) throws Throwable {
         Object result = null;
         Class<?> targetClass = adviceChain.getTargetClass();
         Method method = adviceChain.getMethod();
@@ -56,8 +56,8 @@ public class ProxyAdvisor {
         }
         try {
             result = adviceChain.doAdviceChain();
-            if (advice instanceof AfterReturningAdvice) {
-                ((AfterReturningAdvice) advice).afterReturning(targetClass, result, method, args);
+            if (advice instanceof ReturnBeforeAdvice) {
+                ((ReturnBeforeAdvice) advice).returnBefore(targetClass, result, method, args);
             }
         } catch (Exception e) {
             if (advice instanceof ThrowsAdvice) {
