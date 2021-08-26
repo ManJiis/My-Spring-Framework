@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.b0x0.spring.framework.aop.Aop;
 import top.b0x0.spring.framework.ioc.Ioc;
 import top.b0x0.spring.framework.ioc.core.BeanContext;
 import top.b0x0.spring.framework.webmvc.server.Server;
@@ -91,7 +92,7 @@ public final class AppBoot {
             BeanContext.getInstance().loadBeans(basePackage);
 
             // aop ioc
-//            new Aop().doAop();
+            new Aop().doAop();
             new Ioc().doInstance();
 
             server = new TomcatServer(appConfiguration);

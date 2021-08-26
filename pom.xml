@@ -20,10 +20,10 @@
     </developers>
 
     <modules>
+        <module>b0x0-framework-common</module>
         <module>b0x0-framework-ioc</module>
         <module>b0x0-framework-aop</module>
         <module>b0x0-framework-webmvc</module>
-        <module>b0x0-framework-common</module>
     </modules>
 
     <properties>
@@ -176,49 +176,8 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <!-- Javadoc -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.9.1</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                                <configuration>
-                                    <additionalparam>-Xdoclint:none</additionalparam>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <!-- GPG -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
                 </plugins>
             </build>
-            <!--            <distributionManagement>
-                            <snapshotRepository>
-                                <id>oss</id>
-                                <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-                            </snapshotRepository>
-                            <repository>
-                                <id>oss</id>
-                                <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                            </repository>
-                        </distributionManagement>-->
         </profile>
     </profiles>
 
