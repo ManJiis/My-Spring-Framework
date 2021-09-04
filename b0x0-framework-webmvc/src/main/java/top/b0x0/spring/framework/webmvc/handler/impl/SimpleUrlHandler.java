@@ -2,7 +2,7 @@ package top.b0x0.spring.framework.webmvc.handler.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.b0x0.spring.framework.webmvc.boot.AppBoot;
+import top.b0x0.spring.framework.webmvc.boot.ApplicationBoot;
 import top.b0x0.spring.framework.webmvc.handler.Handler;
 import top.b0x0.spring.framework.webmvc.handler.RequestHandlerChain;
 
@@ -59,6 +59,6 @@ public class SimpleUrlHandler implements Handler {
      * @return 是否为静态资源
      */
     private boolean isStaticResource(String url) {
-        return url.startsWith(AppBoot.getConfiguration().getAssetPath());
+        return url.startsWith(ApplicationBoot.getConfiguration().getAssetPath());
     }
 }

@@ -1,6 +1,6 @@
 package top.b0x0.spring.sample;
 
-import top.b0x0.spring.framework.webmvc.boot.AppBoot;
+import top.b0x0.spring.framework.webmvc.boot.ApplicationBoot;
 
 /**
  * @author ManJiis
@@ -9,6 +9,6 @@ import top.b0x0.spring.framework.webmvc.boot.AppBoot;
  */
 public class Application {
     public static void main(String[] args) {
-        AppBoot.run(Application.class, 8088);
+        ApplicationBoot.run(Application.class, 8088);
     }
 }

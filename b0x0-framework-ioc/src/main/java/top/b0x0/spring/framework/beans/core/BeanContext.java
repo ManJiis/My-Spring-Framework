@@ -1,4 +1,4 @@
-package top.b0x0.spring.framework.ioc.core;
+package top.b0x0.spring.framework.beans.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

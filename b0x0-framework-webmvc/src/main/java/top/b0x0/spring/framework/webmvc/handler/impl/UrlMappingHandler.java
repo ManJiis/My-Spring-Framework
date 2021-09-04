@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.b0x0.spring.framework.common.util.CastUtil;
 import top.b0x0.spring.framework.common.util.ValidateUtil;
-import top.b0x0.spring.framework.ioc.core.BeanContext;
+import top.b0x0.spring.framework.beans.core.BeanContext;
 import top.b0x0.spring.framework.webmvc.annotation.RequestMapping;
 import top.b0x0.spring.framework.webmvc.annotation.RequestParam;
 import top.b0x0.spring.framework.webmvc.annotation.ResponseBody;

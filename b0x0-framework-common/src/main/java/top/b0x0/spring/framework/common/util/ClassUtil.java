@@ -134,7 +134,6 @@ public final class ClassUtil {
         if (null == url) {
             throw new RuntimeException("无法获取项目路径文件");
         }
-
         try {
             if (url.getProtocol().equalsIgnoreCase(FILE_PROTOCOL)) {
                 File file = new File(url.getFile());

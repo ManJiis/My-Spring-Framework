@@ -2,7 +2,7 @@ package top.b0x0.spring.framework.webmvc.render.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.b0x0.spring.framework.webmvc.boot.AppBoot;
+import top.b0x0.spring.framework.webmvc.boot.ApplicationBoot;
 import top.b0x0.spring.framework.webmvc.render.Render;
 import top.b0x0.spring.framework.webmvc.handler.RequestHandlerChain;
 import top.b0x0.spring.framework.webmvc.servlet.helperbean.ModelAndView;
@@ -40,6 +40,6 @@ public class ViewRender implements Render {
         String path = modelAndView.getView();
         Map<String, Object> model = modelAndView.getModel();
         model.forEach(req::setAttribute);
-        req.getRequestDispatcher(AppBoot.getConfiguration().getViewPath() + path).forward(req, resp);
+        req.getRequestDispatcher(ApplicationBoot.getConfiguration().getViewPath() + path).forward(req, resp);
     }
 }

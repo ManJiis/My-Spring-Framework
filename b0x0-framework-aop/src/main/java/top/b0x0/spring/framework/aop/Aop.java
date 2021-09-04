@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import top.b0x0.spring.framework.aop.advice.Advice;
 import top.b0x0.spring.framework.aop.annotation.Aspect;
 import top.b0x0.spring.framework.aop.annotation.AspectOrder;
-import top.b0x0.spring.framework.ioc.core.BeanContext;
+import top.b0x0.spring.framework.beans.core.BeanContext;
 
 import java.util.Comparator;
 import java.util.List;

@@ -1,10 +1,9 @@
-package top.b0x0.spring.framework.ioc;
+package top.b0x0.spring.framework.beans.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.b0x0.spring.framework.common.util.ClassUtil;
 import top.b0x0.spring.framework.ioc.annotation.Autowired;
-import top.b0x0.spring.framework.ioc.core.BeanContext;
 
 import java.lang.reflect.Field;
 import java.util.Optional;

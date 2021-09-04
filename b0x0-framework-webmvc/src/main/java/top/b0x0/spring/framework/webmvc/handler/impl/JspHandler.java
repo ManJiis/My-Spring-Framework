@@ -3,7 +3,7 @@ package top.b0x0.spring.framework.webmvc.handler.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.b0x0.spring.framework.webmvc.boot.AppBoot;
+import top.b0x0.spring.framework.webmvc.boot.ApplicationBoot;
 import top.b0x0.spring.framework.webmvc.handler.Handler;
 import top.b0x0.spring.framework.webmvc.handler.RequestHandlerChain;
 
@@ -54,6 +54,6 @@ public class JspHandler implements Handler {
      * @return 是否为jsp资源
      */
     private boolean isPageView(String url) {
-        return url.startsWith(AppBoot.getConfiguration().getViewPath());
+        return url.startsWith(ApplicationBoot.getConfiguration().getViewPath());
     }
 }

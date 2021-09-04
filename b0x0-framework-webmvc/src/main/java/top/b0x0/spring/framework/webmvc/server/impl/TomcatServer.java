@@ -6,7 +6,7 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.StandardRoot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.b0x0.spring.framework.webmvc.boot.AppBoot;
+import top.b0x0.spring.framework.webmvc.boot.ApplicationBoot;
 import top.b0x0.spring.framework.webmvc.boot.AppConfiguration;
 import top.b0x0.spring.framework.webmvc.server.Server;
 import top.b0x0.spring.framework.webmvc.servlet.DispatcherServlet;
@@ -28,7 +28,7 @@ public class TomcatServer implements Server {
     private Tomcat tomcat;
 
     public TomcatServer() {
-        new TomcatServer(AppBoot.getConfiguration());
+        new TomcatServer(ApplicationBoot.getConfiguration());
     }
 
     public TomcatServer(AppConfiguration appConfiguration) {

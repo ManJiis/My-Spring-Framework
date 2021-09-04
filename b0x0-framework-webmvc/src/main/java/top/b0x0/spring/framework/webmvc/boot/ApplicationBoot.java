@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.b0x0.spring.framework.aop.Aop;
-import top.b0x0.spring.framework.ioc.Ioc;
-import top.b0x0.spring.framework.ioc.core.BeanContext;
+import top.b0x0.spring.framework.beans.core.Ioc;
+import top.b0x0.spring.framework.beans.core.BeanContext;
 import top.b0x0.spring.framework.webmvc.server.Server;
 import top.b0x0.spring.framework.webmvc.server.impl.TomcatServer;
 
@@ -18,8 +18,8 @@ import top.b0x0.spring.framework.webmvc.server.impl.TomcatServer;
  * @since JDK1.8
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class AppBoot {
-    private static final Logger log = LoggerFactory.getLogger(AppBoot.class);
+public final class ApplicationBoot {
+    private static final Logger log = LoggerFactory.getLogger(ApplicationBoot.class);
 
     /**
      * 全局配置
@@ -47,7 +47,7 @@ public final class AppBoot {
      * @param port      服务器端口
      */
     public static void run(Class<?> bootClass, int port) {
-        new AppBoot().start(AppConfiguration.builder().bootClass(bootClass).serverPort(port).build());
+        new ApplicationBoot().start(AppConfiguration.builder().bootClass(bootClass).serverPort(port).build());
     }
 
     /**
@@ -56,7 +56,7 @@ public final class AppBoot {
      * @param appConfiguration 配置
      */
     public static void run(AppConfiguration appConfiguration) {
-        new AppBoot().start(appConfiguration);
+        new ApplicationBoot().start(appConfiguration);
     }
 
     /**
@@ -84,7 +84,7 @@ public final class AppBoot {
      */
     private void start(AppConfiguration appConfiguration) {
         try {
-            AppBoot.appConfiguration = appConfiguration;
+            ApplicationBoot.appConfiguration = appConfiguration;
 
             // tomcat启动时加载所有class
             String basePackage = appConfiguration.getBootClass().getPackage().getName();
