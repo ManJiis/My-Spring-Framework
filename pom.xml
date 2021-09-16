@@ -21,7 +21,7 @@
 
     <modules>
         <module>b0x0-framework-common</module>
-        <module>b0x0-framework-ioc</module>
+        <module>b0x0-framework-beans</module>
         <module>b0x0-framework-aop</module>
         <module>b0x0-framework-webmvc</module>
     </modules>

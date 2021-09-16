@@ -36,7 +36,7 @@
         <!-- b0x0 ioc -->
         <dependency>
             <groupId>top.b0x0.spring</groupId>
-            <artifactId>b0x0-framework-ioc</artifactId>
+            <artifactId>b0x0-framework-beans</artifactId>
             <version>2.0-SNAPSHOT</version>
         </dependency>
 

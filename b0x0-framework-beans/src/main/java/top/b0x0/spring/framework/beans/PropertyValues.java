@@ -1,7 +1,5 @@
 package top.b0x0.spring.framework.beans;
 
-import top.b0x0.spring.framework.beans.PropertyValue;
-
 import java.util.ArrayList;
 import java.util.List;
 

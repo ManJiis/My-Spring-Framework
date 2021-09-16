@@ -11,8 +11,8 @@
     </parent>
 
     <groupId>top.b0x0.spring</groupId>
-    <artifactId>b0x0-framework-ioc</artifactId>
-    <name>B0x0 Framework IOC</name>
+    <artifactId>b0x0-framework-beans</artifactId>
+    <name>B0x0 Framework Beans</name>
     <version>2.0-SNAPSHOT</version>
 
     <properties>
